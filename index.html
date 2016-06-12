@@ -17,8 +17,10 @@
 var GAMEWIDTH = 800;
 var GAMEHEIGHT = 600;
 
-var money;
+var money = 0;
+var moneyText;
 
+var baseMenuOpen = false; //check to see if menu is open for the base.
 
 var game = new Phaser.Game(GAMEWIDTH, GAMEHEIGHT, Phaser.CANVAS, '', { preload: preload, create: create, update: update});
 
@@ -35,19 +37,16 @@ function preload() {
 
 }
 
-var baseMenuOpen = false; //check to see if menu is open for the base.
 
 function create() {
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    money = 0;
 
     bkg = game.add.sprite(GAMEWIDTH/2, GAMEHEIGHT/2, 'bkg');
     bkg.anchor.setTo(0.5); //sets the anchor to the middle of the sprite.
-    bkg.inputEnabled = true; //enables all kinds of input actions on the image.
-    bkg.events.onInputDown.add(baseClosed, this);
-    
+    //bkg.inputEnabled = true; //enables all kinds of input actions on the image.
+
     base = game.add.sprite(GAMEWIDTH/2, GAMEHEIGHT/2, 'base');
     base.anchor.setTo(0.5); //sets the anchor to the middle of the sprite.
     base.scale.setTo(2,2);
@@ -57,11 +56,16 @@ function create() {
     button1 = game.add.sprite(GAMEWIDTH/2, GAMEHEIGHT/2, 'button1');
     button1.anchor.setTo(0.5);
     button1.alpha = 0;
-    button1.events.onInputDown.add(button1Actions, this);
+    //button1.events.onInputDown.add(button1Actions, this);
 
     returnButton = game.add.sprite(GAMEWIDTH/2, GAMEHEIGHT/2 + 75, 'returnButton');
     returnButton.anchor.setTo(0.5);
-    returnButton.visible = true;
+    returnButton.visible = false;
+    returnButton.inputEnabled = true;
+    returnButton.events.onInputDown.add(baseClosed, this);
+
+    var style = { font: "32px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: sprite.width, align: "center", backgroundColor: "#ffff00" };
+    moneyText = game.add.text(100, 100, "Money: ");
     
 
     // button2 = game.add.sprite(GAMEWIDTH/2, GAMEHEIGHT/2, 'button2');
@@ -76,14 +80,21 @@ function create() {
 
 }
 
+function test()
+{
+
+    base.x += 100;
+
+}
+
+
 //base gets clicked, shows tech tree.
 function baseOpen()
 {    
     baseMenuOpen = true;
     button1.visible = true;
-    //returnButton.visible = true;
-    // button2.visible = true;
-    // button3.visible = true;
+    returnButton.visible = true;
+
     
     game.add.tween(button1).to( {y: GAMEHEIGHT/2 - 75, x: GAMEWIDTH/2 - 75, alpha: 1 }, 300, Phaser.Easing.Cubic.Out, true);
 
@@ -105,6 +116,8 @@ function baseClosed()
 
         game.add.tween(button1).to( {y: GAMEHEIGHT/2 , x: GAMEWIDTH/2, alpha: 0}, 500, Phaser.Easing.Exponential.Out, true)
 
+        returnButton.visible = false;
+
 
     }
 }
@@ -116,10 +129,10 @@ function baseClosed()
 function update()
 {
     
-    if (baseMenuOpen)
-    {
-        //base.x += 5;
-    }
+    // if (baseMenuOpen)
+    // {
+    //     returnButton.x += 5;
+    // }
 
 
 }
